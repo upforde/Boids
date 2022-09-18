@@ -2,6 +2,7 @@ from pyglet.gl import *
 import ctypes
 import pyrr
 import time
+import OpenGL.GL.shaders
 
 class Triangle:
     def __init__(self):
@@ -34,22 +35,27 @@ class Triangle:
         }
         """
 
-        vertex_buff = ctypes.create_string_buffer(self.vertex_shader_source)
-        c_vertex = ctypes.cast(ctypes.pointer(ctypes.pointer(vertex_buff)), ctypes.POINTER(ctypes.POINTER(GLchar)))
-        vertex_shader = glCreateShader(GL_VERTEX_SHADER)
-        glShaderSource(vertex_shader, 1, c_vertex, None)
-        glCompileShader(vertex_shader)
+        
+        shader = OpenGL.GL.shaders.compileProgram(OpenGL.GL.shaders.compileShader(self.vertex_shader_source, GL_VERTEX_SHADER),
+                                                  OpenGL.GL.shaders.compileShader(self.fragment_shader_source, GL_FRAGMENT_SHADER))
 
-        fragment_buff = ctypes.create_string_buffer(self.fragment_shader_source)
-        c_fragment = ctypes.cast(ctypes.pointer(ctypes.pointer(fragment_buff)), ctypes.POINTER(ctypes.POINTER(GLchar)))
-        fragment_shader = glCreateShader(GL_FRAGMENT_SHADER)
-        glShaderSource(fragment_shader, 1, c_fragment, None)
-        glCompileShader(fragment_shader)
 
-        shader = glCreateProgram()
-        glAttachShader(shader, vertex_shader)
-        glAttachShader(shader, fragment_shader)
-        glLinkProgram(shader)
+        # vertex_buff = ctypes.create_string_buffer(self.vertex_shader_source)
+        # c_vertex = ctypes.cast(ctypes.pointer(ctypes.pointer(vertex_buff)), ctypes.POINTER(ctypes.POINTER(GLchar)))
+        # vertex_shader = glCreateShader(GL_VERTEX_SHADER)
+        # glShaderSource(vertex_shader, 1, c_vertex, None)
+        # glCompileShader(vertex_shader)
+
+        # fragment_buff = ctypes.create_string_buffer(self.fragment_shader_source)
+        # c_fragment = ctypes.cast(ctypes.pointer(ctypes.pointer(fragment_buff)), ctypes.POINTER(ctypes.POINTER(GLchar)))
+        # fragment_shader = glCreateShader(GL_FRAGMENT_SHADER)
+        # glShaderSource(fragment_shader, 1, c_fragment, None)
+        # glCompileShader(fragment_shader)
+
+        # shader = glCreateProgram()
+        # glAttachShader(shader, vertex_shader)
+        # glAttachShader(shader, fragment_shader)
+        # glLinkProgram(shader)
 
         glUseProgram(shader)
 
